@@ -1,0 +1,45 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  datasource:
+    password: 12345
+    url: jdbc:postgresql://localhost:5332/dressmart
+    username: nilupulee
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: password
+    from: hello@gmail.com
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+verification:
+  email-verification-expiration: 15
+
+security:
+  jwt:
+    secret-key: 0c7a60c5ab82db29b8c352c0d61738f3c295ea372e8d839ba919c99e6d7a3d6e
+    expiration-time: 86400000
