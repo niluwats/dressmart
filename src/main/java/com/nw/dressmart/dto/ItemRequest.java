@@ -21,5 +21,5 @@ public class ItemRequest {
 
     @NotNull(message = "category ID cannot be null")
     @Min(value = 1,message = "category ID cannot be 0 or negative")
-    private Integer categoryId;
+    private Long categoryId;
 }

@@ -3,6 +3,7 @@ package com.nw.dressmart.service;
 import com.nw.dressmart.dto.CategoryDto;
 import com.nw.dressmart.dto.CategoryRequest;
 import com.nw.dressmart.entity.Category;
+import com.nw.dressmart.entity.Item;
 import com.nw.dressmart.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public CategoryDto createCategory(CategoryRequest categoryRequest) {
         Optional<Category> optionalCategory=categoryRepository.findByName(categoryRequest.getName());
-        if(optionalCategory.isPresent()){
+        if (optionalCategory.isPresent()) {
             throw new IllegalStateException("category name "+categoryRequest.getName()+" already exists");
         }
 
@@ -42,10 +43,8 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public CategoryDto viewCategory(Long id) {
-        Optional<Category> category=categoryRepository.findById(id);
-        if(category.isEmpty()){
-            throw new IllegalStateException("category with ID "+id+" doesn't exists");
-        }
+        Category category= categoryRepository.findById(id).orElseThrow(()->
+                new IllegalStateException("category with ID "+id+" doesn't exists"));
 
         return modelMapper.map(category,CategoryDto.class);
     }
@@ -62,10 +61,8 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public String deleteCategory(Long id) {
-        Optional<Category> category=categoryRepository.findById(id);
-        if(category.isEmpty()){
-            throw new IllegalStateException("category with ID "+id+" doesn't exists");
-        }
+        categoryRepository.findById(id).orElseThrow(()->
+                new IllegalStateException("category with ID "+id+" doesn't exists"));
 
         categoryRepository.deleteById(id);
         return "deleted";

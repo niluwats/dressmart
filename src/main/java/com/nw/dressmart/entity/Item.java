@@ -34,16 +34,13 @@ public class Item {
     @Column(nullable = false)
     private Double price;
 
-    @OneToOne(targetEntity = Category.class,fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Category.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 
     private String imageUrl;
 
     private LocalDateTime createdOn;
-
-    @OneToOne(mappedBy = "item",cascade = CascadeType.ALL)
-    private InventoryItem inventoryItem;
 
     @Column(nullable = false)
     private Boolean status;

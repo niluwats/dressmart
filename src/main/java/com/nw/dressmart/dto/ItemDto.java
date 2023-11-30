@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class ItemDto {
     private Long id;
     private String name;
-    private Integer category;
+    private String categoryName;
     private String description;
     private Double price;
     private Integer quantity;
