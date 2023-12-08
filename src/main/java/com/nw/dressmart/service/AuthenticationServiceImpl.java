@@ -1,12 +1,15 @@
 package com.nw.dressmart.service;
 
-import com.nw.dressmart.dto.LoginRequest;
-import com.nw.dressmart.dto.LoginResponse;
-import com.nw.dressmart.dto.RegisterRequest;
+import com.nw.dressmart.dto.LoginRequestDto;
+import com.nw.dressmart.dto.LoginResponseDto;
+import com.nw.dressmart.dto.RegisterRequestDto;
 import com.nw.dressmart.dto.UserDto;
+import com.nw.dressmart.entity.Cart;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.entity.User;
 import com.nw.dressmart.entity.VerificationToken;
+import com.nw.dressmart.mappers.UserMapper;
+import com.nw.dressmart.repository.CartRepository;
 import com.nw.dressmart.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,55 +25,62 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService{
-    private final UserRepository userRepository;
-    private final VerificationService verificationService;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
-    private final AuthenticationManager authenticationManager;
-    private  final  JwtService jwtService;
-    private final Long tokenExpiration;
 
     @Autowired
-    public AuthenticationServiceImpl(UserRepository userRepository,
-                                     VerificationService verificationService,
-                                     ModelMapper modelMapper,
-                                     PasswordEncoder passwordEncoder,
-                                     EmailService emailService,
-                                     AuthenticationManager authenticationManager,
-                                     JwtService jwtService,
-                                     @Value("${verification.email-verification-expiration}") Long tokenExpiration) {
-        this.userRepository = userRepository;
-        this.verificationService = verificationService;
-        this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-        this.tokenExpiration = tokenExpiration;
+    private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private VerificationService verificationService;
+
+    @Autowired
+    private final UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private  JwtService jwtService;
+
+
+    @Value("${verification.email-verification-expiration}")
+    private Long tokenExpiration;
+
+    public AuthenticationServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 
     @Override
-    public UserDto saveUser(RegisterRequest request) {
+    public UserDto saveUser(RegisterRequestDto request) {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
         if (optionalUser.isPresent()) {
             throw new IllegalStateException("user with email '" + request.getEmail() + " already exists");
         }
 
-        User user = modelMapper.map(request, User.class);
+//        User user = modelMapper.map(request, User.class);
+        User user=userMapper.registerRequestDtoToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
 
-        System.out.println("password - "+user.getPassword());
         userRepository.save(user);
 
 //        emailVerification(user, request.getEmail(), request.getFirstName());
+        createCart(user.getId());
 
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.UserToUserDto(user);
+//        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public LoginResponse authenticate(LoginRequest request) {
+    public LoginResponseDto authenticate(LoginRequestDto request) {
         String email = request.getEmail();
 
         authenticationManager.authenticate(
@@ -80,15 +90,11 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 )
         );
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isEmpty()) {
-            throw new IllegalStateException("user with email " + email + " not found");
-        }
-
-        User user = modelMapper.map(optionalUser, User.class);
+        User user = userRepository.findByEmail(email).orElseThrow(()->
+                new IllegalStateException("user with email " + email + " not found"));
 
         String token = jwtService.generateToken(user);
-        LoginResponse loginResponseDto = new LoginResponse();
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setToken(token);
         return loginResponseDto;
     }
@@ -125,6 +131,16 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         String link="http://localhost:8080/api/v1/auth/verifyEmail?token="+token;
         emailService.send(email, buildEmail(name, link));
+    }
+
+    private void createCart(Long userId){
+        User user=userRepository.findById(userId).orElseThrow(()->
+                new IllegalStateException("user not exists to create a cart"));
+        Cart cart=new Cart();
+        cart.setUser(user);
+        cart.setUpdatedTimestamp(LocalDateTime.now());
+
+        cartRepository.save(cart);
     }
 
     private String buildEmail(String name, String link) {

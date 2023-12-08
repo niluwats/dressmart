@@ -1,44 +1,44 @@
 package com.nw.dressmart.service;
 
 import com.nw.dressmart.dto.CategoryDto;
-import com.nw.dressmart.dto.CategoryRequest;
+import com.nw.dressmart.dto.CategoryRequestDto;
 import com.nw.dressmart.entity.Category;
-import com.nw.dressmart.entity.Item;
+import com.nw.dressmart.mappers.CategoryMapper;
 import com.nw.dressmart.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
-    private final CategoryRepository categoryRepository;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
-    public CategoryDto createCategory(CategoryRequest categoryRequest) {
+    public CategoryDto createCategory(CategoryRequestDto categoryRequest) {
         Optional<Category> optionalCategory=categoryRepository.findByName(categoryRequest.getName());
         if (optionalCategory.isPresent()) {
             throw new IllegalStateException("category name "+categoryRequest.getName()+" already exists");
         }
 
-        Category category=modelMapper.map(categoryRequest,Category.class);
+        Category category=categoryMapper.categoryDtoToCategory(categoryRequest);
         category.setStatus(true);
 
         categoryRepository.save(category);
-        return modelMapper.map(category,CategoryDto.class);
+        return categoryMapper.categoryToCategoryDto(category);
     }
 
     @Override
     public List<CategoryDto> viewCategories() {
         List<Category> categories=categoryRepository.findAll();
-        return  categories.stream().map(this::convertToDto).collect(Collectors.toList());
+        return  categories.stream().map(categoryMapper::categoryToCategoryDto).collect(Collectors.toList());
     }
 
     @Override
@@ -46,12 +46,12 @@ public class CategoryServiceImpl implements CategoryService{
         Category category= categoryRepository.findById(id).orElseThrow(()->
                 new IllegalStateException("category with ID "+id+" doesn't exists"));
 
-        return modelMapper.map(category,CategoryDto.class);
+        return categoryMapper.categoryToCategoryDto(category);
     }
 
     @Transactional
     @Override
-    public String updateCategory(Long id,CategoryRequest categoryRequest) {
+    public String updateCategory(Long id, CategoryRequestDto categoryRequest) {
         Category category=categoryRepository.findById(id).orElseThrow(()->
                 new IllegalStateException("category with ID "+id+" doesn't exists"));
 
@@ -66,9 +66,5 @@ public class CategoryServiceImpl implements CategoryService{
 
         categoryRepository.deleteById(id);
         return "deleted";
-    }
-
-    private CategoryDto convertToDto(Category category){
-        return modelMapper.map(category,CategoryDto.class);
     }
 }

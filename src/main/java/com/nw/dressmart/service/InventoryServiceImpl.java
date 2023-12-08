@@ -1,35 +1,41 @@
 package com.nw.dressmart.service;
 
 import com.nw.dressmart.dto.InventoryDto;
-import com.nw.dressmart.dto.InventoryRequest;
+import com.nw.dressmart.dto.InventoryRequestDto;
 import com.nw.dressmart.entity.InventoryItem;
 import com.nw.dressmart.entity.Item;
+import com.nw.dressmart.mappers.InventoryMapper;
 import com.nw.dressmart.repository.InventoryRepository;
 import com.nw.dressmart.repository.ItemRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class InventoryServiceImpl implements InventoryService{
-    private  final InventoryRepository inventoryRepository;
-    private  final ItemRepository itemRepository;
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private InventoryMapper inventoryMapper;
 
     @Override
-    public InventoryDto addNewStock(InventoryRequest inventoryRequest) {
+    public InventoryDto addNewStock(InventoryRequestDto inventoryRequest) {
         Item item=itemRepository.findById(inventoryRequest.getItemId()).orElseThrow(()->
                 new IllegalStateException("item id "+inventoryRequest.getItemId()+" not found"));
 
-        InventoryItem inventoryItem=convertToEntity(inventoryRequest,item);
+        InventoryItem inventoryItem=inventoryMapper.inventoryDtoToInventoryItem(inventoryRequest);
+        inventoryItem.setItem(item);
 
         inventoryRepository.save(inventoryItem);
-        return convertToDto(inventoryItem);
+        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
     }
 
     @Override
@@ -37,24 +43,24 @@ public class InventoryServiceImpl implements InventoryService{
         InventoryItem inventoryItem=inventoryRepository.findById(id).orElseThrow(()->
                 new IllegalStateException("inventory id "+id+" not found"));
 
-        return convertToDto(inventoryItem);
+        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
     }
 
     @Override
     public List<InventoryDto> getStocks() {
         List<InventoryItem> inventoryItems=inventoryRepository.findAll();
-        return inventoryItems.stream().map(this::convertToDto).collect(Collectors.toList());
+        return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
     }
 
     @Override
     public List<InventoryDto> getItemStocks(Long itemId) {
-        List<InventoryItem> inventoryItems=inventoryRepository.findByItem_Id(itemId);
-        return inventoryItems.stream().map(this::convertToDto).collect(Collectors.toList());
+        List<InventoryItem> inventoryItems=inventoryRepository.findAllByItem_Id(itemId);
+        return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public InventoryDto updateInventory(Long id,InventoryRequest inventoryRequest) {
+    public InventoryDto updateInventory(Long id, InventoryRequestDto inventoryRequest) {
         Long itemId=inventoryRequest.getItemId();
 
         InventoryItem inventoryItem=inventoryRepository.findById(id).
@@ -69,7 +75,7 @@ public class InventoryServiceImpl implements InventoryService{
             inventoryItem.setItem(item);
         }
 
-        return convertToDto(inventoryItem);
+        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
     }
 
     @Override
@@ -81,25 +87,4 @@ public class InventoryServiceImpl implements InventoryService{
         inventoryRepository.deleteById(id);
         return "deleted";
     }
-
-    private InventoryItem convertToEntity(InventoryRequest request,Item item){
-        InventoryItem inventoryItem=new InventoryItem();
-        inventoryItem.setItem(item);
-        inventoryItem.setQuantity(request.getQuantity());
-        inventoryItem.setCreatedOn(LocalDateTime.now());
-
-        return inventoryItem;
-    }
-    private InventoryDto convertToDto(InventoryItem inventoryItem){
-        InventoryDto inventoryDto=new InventoryDto();
-        inventoryDto.setStockId(inventoryItem.getId());
-        inventoryDto.setItemId(inventoryItem.getItem().getId());
-        inventoryDto.setItemName(inventoryItem.getItem().getName());
-        inventoryDto.setQuantity(inventoryItem.getQuantity());
-        inventoryDto.setCreatedOn(inventoryItem.getCreatedOn());
-
-        return inventoryDto;
-    }
-
-
 }

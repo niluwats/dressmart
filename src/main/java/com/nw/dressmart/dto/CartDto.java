@@ -12,7 +12,7 @@ import java.util.List;
 public class CartDto {
     private Long id;
     private Long userId;
-    private BigDecimal TotalPrice;
-    private LocalDateTime updatedOn;
+    private BigDecimal totalPrice;
+    private LocalDateTime updatedTimestamp;
     private List<CartItemDto> cartItems;
 }

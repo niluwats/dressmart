@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class ItemRequest {
+public class ItemRequestDto {
     @NotBlank(message = "name cannot be empty")
     @NotNull(message = "name is null")
     @Size(min = 2,message = "name should have at least 2 characters")

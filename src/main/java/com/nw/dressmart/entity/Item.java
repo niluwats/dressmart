@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,6 +42,9 @@ public class Item {
     private String imageUrl;
 
     private LocalDateTime createdOn;
+
+    @OneToMany(mappedBy = "item",cascade = CascadeType.ALL)
+    private List<InventoryItem> inventoryItem;
 
     @Column(nullable = false)
     private Boolean status;

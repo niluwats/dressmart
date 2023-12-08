@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InventoryRequest {
+public class InventoryRequestDto {
     @NotNull(message = "item ID cannot be null")
     @Min(value = 1,message = "category ID cannot be 0 or negative")
     private Long itemId;

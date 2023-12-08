@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 public class CartItemDto {
     private Long id;
     private String name;
+    private Long inventoryItemId;
     private Integer quantity;
     private BigDecimal subTotal;
-    private LocalDateTime addedOn;
+    private LocalDateTime addedTimestamp;
+    private LocalDateTime updatedTimestamp;
 }

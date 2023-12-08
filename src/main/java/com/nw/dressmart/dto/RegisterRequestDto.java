@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 
-public class RegisterRequest {
+public class RegisterRequestDto {
     @NotBlank(message = "field firstName cannot be empty")
     @NotNull(message = "field firstName is null")
     @Size(min = 2,message = "name should have at least 2 characters")

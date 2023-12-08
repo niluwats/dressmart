@@ -1,10 +1,10 @@
 package com.nw.dressmart.controller;
 
 import com.nw.dressmart.dto.ItemDto;
-import com.nw.dressmart.dto.ItemRequest;
+import com.nw.dressmart.dto.ItemRequestDto;
 import com.nw.dressmart.service.ItemService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +13,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/item")
-@AllArgsConstructor
 public class ItemController {
-    private final ItemService itemService;
+    @Autowired
+    private ItemService itemService;
 
-    @PostMapping
-    public ResponseEntity<ItemDto> createItem(@RequestBody @Valid ItemRequest request){
+    @PostMapping("/")
+    public ResponseEntity<ItemDto> createItem(@RequestBody @Valid ItemRequestDto request){
         return new ResponseEntity<ItemDto>(itemService.createItem(request), HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<ItemDto>> viewItems(){
         return  ResponseEntity.ok(itemService.viewItems());
     }
@@ -34,7 +34,7 @@ public class ItemController {
 
     @PutMapping("{itemId}")
     public String updateItem(@PathVariable("itemId") Long id,
-                                 @RequestBody @Valid ItemRequest itemRequest){
+                                 @RequestBody @Valid ItemRequestDto itemRequest){
         return itemService.updateItem(id,itemRequest);
     }
 

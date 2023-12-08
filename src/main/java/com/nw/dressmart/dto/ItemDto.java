@@ -13,7 +13,6 @@ public class ItemDto {
     private String categoryName;
     private String description;
     private Double price;
-    private Integer quantity;
     private LocalDateTime createdOn;
     private String imageUrl;
     private Boolean status;

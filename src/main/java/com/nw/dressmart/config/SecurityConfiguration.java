@@ -3,6 +3,7 @@ package com.nw.dressmart.config;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,10 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfiguration {
-    private  final UserService userService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
@@ -38,7 +41,9 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST,"/api/v1/item").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT,"/api/v1/item/**").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.DELETE,"/api/v1/item/**").hasAuthority(Role.ADMIN.name())
-                                .requestMatchers("api/v1/inventory/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/v1/inventory").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT,"/api/v1/inventory/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE,"/api/v1/inventory/**").hasAuthority(Role.ADMIN.name())
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(manager->

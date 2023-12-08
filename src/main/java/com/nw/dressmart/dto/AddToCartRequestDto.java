@@ -3,9 +3,9 @@ package com.nw.dressmart.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class AddToCart {
-    private Long itemId;
+@Getter
+public class AddToCartRequestDto {
+    private Long inventoryItemId;
     private Integer quantity;
 }

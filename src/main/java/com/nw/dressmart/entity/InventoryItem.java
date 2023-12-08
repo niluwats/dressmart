@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +34,7 @@ public class InventoryItem {
     private Integer quantity;
 
     private LocalDateTime createdOn;
+
+    @OneToMany(mappedBy = "inventoryItem")
+    private List<CartItem> cartItemList;
 }

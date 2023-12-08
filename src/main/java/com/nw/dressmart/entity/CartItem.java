@@ -26,13 +26,15 @@ public class CartItem {
     )
     private Long id;
 
+    private String name;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id",nullable = false)
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id",nullable = false,referencedColumnName = "id")
-    private Item item;
+    @JoinColumn(name = "inventory_item_id",nullable = false)
+    private InventoryItem inventoryItem;
 
     private Integer quantity;
 
@@ -40,12 +42,19 @@ public class CartItem {
 
     private LocalDateTime addedTimestamp;
 
+    private LocalDateTime updatedTimestamp;
+
     private Boolean status;
 
-    @PostUpdate
-    @PostPersist
-    private void updateStock(){
-        int updatedStock=item.getInventoryItem().getQuantity()-quantity;
-        item.getInventoryItem().setQuantity(updatedStock);
+//    @PostUpdate
+//    @PostPersist
+//    private void updateStock(){
+//        int updatedStock=item.getInventoryItem().getQuantity()-quantity;
+//        item.getInventoryItem().setQuantity(updatedStock);
+//    }
+
+    @PrePersist
+    private void updateItemName(){
+        name=getInventoryItem().getItem().getName();
     }
 }
