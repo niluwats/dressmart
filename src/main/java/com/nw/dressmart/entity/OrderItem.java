@@ -30,6 +30,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id",referencedColumnName = "id")
     private Order order;
 
+    @OneToOne
+    @JoinColumn(name = "cart_item_id",referencedColumnName = "id")
+    private CartItem cartItem;
+
     @ManyToOne
     @JoinColumn(name = "item_id",referencedColumnName = "id")
     private Item item;

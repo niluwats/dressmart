@@ -44,10 +44,4 @@ public class CartController {
         cartItemService.removeFromCart(cartId,cartItemId);
         return "removed";
     }
-
-    private Long getUserId(String authHeader){
-        String token=authHeader.substring(7);
-        String email=jwtService.extractUsername(token);
-        return userService.findUserByEmail(email).getId();
-    }
 }

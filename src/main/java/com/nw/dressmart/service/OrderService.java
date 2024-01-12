@@ -1,7 +1,9 @@
 package com.nw.dressmart.service;
 
+import com.nw.dressmart.dto.OrderRequestDto;
+
 public interface OrderService {
-    void newOrder();
+    String newOrder(OrderRequestDto orderRequestDto,Long userId);
     void getOrder();
     void getOrders();
     void cancelOrder();

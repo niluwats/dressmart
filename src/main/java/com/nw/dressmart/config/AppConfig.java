@@ -18,6 +18,4 @@ public class AppConfig {
     public JavaMailSender mailSender(){
         return  new JavaMailSenderImpl();
     }
-
-
 }

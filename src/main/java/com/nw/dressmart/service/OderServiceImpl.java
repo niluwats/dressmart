@@ -1,5 +1,6 @@
 package com.nw.dressmart.service;
 
+import com.nw.dressmart.dto.OrderRequestDto;
 import com.nw.dressmart.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,8 @@ public class OderServiceImpl implements OrderService{
     private OrderRepository orderRepository;
 
     @Override
-    public void newOrder() {
-
+    public String newOrder(OrderRequestDto orderRequestDto,Long userId) {
+        return null;
     }
 
     @Override

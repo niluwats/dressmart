@@ -1,10 +1,11 @@
 package com.nw.dressmart.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+@AllArgsConstructor
 @Data
-
 public class RegisterRequestDto {
     @NotBlank(message = "field firstName cannot be empty")
     @NotNull(message = "field firstName is null")

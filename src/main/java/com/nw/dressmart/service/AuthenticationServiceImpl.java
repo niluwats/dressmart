@@ -65,7 +65,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             throw new IllegalStateException("user with email '" + request.getEmail() + " already exists");
         }
 
-//        User user = modelMapper.map(request, User.class);
         User user=userMapper.registerRequestDtoToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
@@ -76,7 +75,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         createCart(user.getId());
 
         return userMapper.UserToUserDto(user);
-//        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
