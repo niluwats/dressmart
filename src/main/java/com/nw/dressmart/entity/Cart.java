@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,10 +31,10 @@ public class Cart {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
-    private List<CartItem> cartItem;
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<CartItem> cartItems;
 
-    @Column(nullable = false)
+    @Formula("(SELECT COALESCE(SUM(ci.sub_total),0) FROM cart_item ci WHERE ci.cart_id=id)")
     private BigDecimal totalPrice;
 
     @Column(nullable = false)

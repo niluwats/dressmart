@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,7 +35,7 @@ public class Item {
     @Column(nullable = false)
     private Double price;
 
-    @OneToOne(targetEntity = Category.class,fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Category.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 
@@ -42,8 +43,8 @@ public class Item {
 
     private LocalDateTime createdOn;
 
-    @OneToOne(mappedBy = "item",cascade = CascadeType.ALL)
-    private InventoryItem inventoryItem;
+    @OneToMany(mappedBy = "item",cascade = CascadeType.ALL)
+    private List<InventoryItem> inventoryItem;
 
     @Column(nullable = false)
     private Boolean status;

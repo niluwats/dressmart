@@ -1,10 +1,7 @@
 package com.nw.dressmart.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +13,7 @@ import java.util.Collections;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -31,23 +29,37 @@ public class User implements UserDetails {
     )
     private Long id;
 
+    @NonNull
     @Column(nullable = false)
     private String firstName;
 
+    @NonNull
     @Column(nullable = false)
     private String lastName;
 
+    @NonNull
     @Column(nullable = false,unique = true)
     private String email;
 
+    @NonNull
     @Column(nullable = false)
     private String password;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private Boolean locked=false;
     private Boolean enabled=true;
+
+    public User(Long id, @NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, @NonNull Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

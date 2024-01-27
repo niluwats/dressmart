@@ -1,5 +1,6 @@
 package com.nw.dressmart.config;
 
+import com.nw.dressmart.mappers.UserMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

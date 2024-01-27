@@ -3,8 +3,10 @@ package com.nw.dressmart.config;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,10 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfiguration {
-    private  final UserService userService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
@@ -30,7 +34,17 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers("/api/v1/auth/**")
                                 .permitAll()
+                                .requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/v1/user").hasAnyAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/v1/category").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT,"/api/v1/category/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE,"/api/v1/category/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/v1/item").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT,"/api/v1/item/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE,"/api/v1/item/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/v1/inventory").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT,"/api/v1/inventory/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE,"/api/v1/inventory/**").hasAuthority(Role.ADMIN.name())
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(manager->

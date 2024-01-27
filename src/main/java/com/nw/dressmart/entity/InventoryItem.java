@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,11 +27,14 @@ public class InventoryItem {
     )
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "item_id",referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id",referencedColumnName = "id",nullable = false)
     private Item item;
 
     private Integer quantity;
 
-    private LocalDateTime updatedOn;
+    private LocalDateTime createdOn;
+
+    @OneToMany(mappedBy = "inventoryItem")
+    private List<CartItem> cartItemList;
 }

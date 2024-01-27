@@ -2,16 +2,16 @@ package com.nw.dressmart.service;
 
 import com.nw.dressmart.entity.VerificationToken;
 import com.nw.dressmart.repository.VerificationRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class VerificationServiceImpl implements VerificationService{
-    private final VerificationRepository verificationRepository;
+    @Autowired
+    private VerificationRepository verificationRepository;
 
     @Override
     public void saveVerificationToken(VerificationToken token) {

@@ -5,7 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,11 +20,17 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 
 @Component
-@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
-    private final HandlerExceptionResolver handlerExceptionResolver;
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private HandlerExceptionResolver handlerExceptionResolver;
+
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

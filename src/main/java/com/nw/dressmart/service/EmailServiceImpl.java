@@ -13,16 +13,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailServiceImpl implements EmailService{
-    private final JavaMailSender mailSender;
-    private final static Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
-
-    private final String fromEmail;
 
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender,  @Value("${spring.mail.from}") String fromEmail) {
-        this.mailSender = mailSender;
-        this.fromEmail = fromEmail;
-    }
+    private JavaMailSender mailSender;
+
+    @Autowired
+    @Value("${spring.mail.from}")
+    private String fromEmail;
+
+    private final static Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
 
     @Override
     @Async
