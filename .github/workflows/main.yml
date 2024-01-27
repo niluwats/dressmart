@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build-deploy:
@@ -16,8 +17,12 @@ jobs:
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
+          distribution: 'temurin'
           java-version: 17
+#          cache: gradle
+
+      - name: Grant execution permissions to Gradle wrapper
+        run: chmod +x ./gradlew
 
       - name: Unit tests
         run: ./gradlew test
@@ -25,4 +30,5 @@ jobs:
       - name: Build the application
         run: |
           ./gradlew clean
+          
           ./gradlew build
