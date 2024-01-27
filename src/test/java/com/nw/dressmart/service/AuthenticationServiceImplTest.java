@@ -45,8 +45,7 @@ class AuthenticationServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        System.out.println(passwordEncoder);
-        passwordEncoder=new BCryptPasswordEncoder();
+//        passwordEncoder=new BCryptPasswordEncoder();
     }
 
     @Test
