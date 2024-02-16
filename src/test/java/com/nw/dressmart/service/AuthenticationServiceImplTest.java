@@ -6,6 +6,7 @@ import com.nw.dressmart.dto.UserDto;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.entity.User;
 import com.nw.dressmart.mappers.UserMapper;
+import com.nw.dressmart.repository.CartRepository;
 import com.nw.dressmart.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -26,8 +27,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @DataJpaTest
-@Import(TestConfig.class)
-@ExtendWith(MockitoExtension.class)
 class AuthenticationServiceImplTest {
 
     @Mock
@@ -39,52 +38,64 @@ class AuthenticationServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock CartService cartService;
+
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-//        passwordEncoder=new BCryptPasswordEncoder();
     }
 
     @Test
     @Disabled
     void saveUser_ShouldSaveUserAndCreateCard() {
         //given
-        String password="john!123";
-        RegisterRequestDto requestDto=new RegisterRequestDto("john","doe","john@example.com",password);
-        User mappedUser=new User();
-        mappedUser.setPassword(password);
-        mappedUser.setRole(Role.USER);
+        RegisterRequestDto dto=new RegisterRequestDto("john","doe","mkmk@example.com","password");
 
-        UserDto userDto=new UserDto(1L,"john","doe","john@example.com");
+        User user=new User();
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        user.setPassword("encodedPw");
+        user.setRole(Role.USER);
 
-        when(userRepository.findByEmail(requestDto.getEmail())).thenReturn(Optional.empty());
-        when(userMapper.registerRequestDtoToUser(requestDto)).thenReturn(mappedUser);
-        when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("encodedPw");
-        when(userRepository.save(any(User.class))).thenReturn(mappedUser);
-        when(userMapper.UserToUserDto(mappedUser)).thenReturn(userDto);
+        User savedUser=new User();
+        savedUser.setFirstName(user.getFirstName());
+        savedUser.setLastName(user.getLastName());
+        savedUser.setEmail(user.getEmail());
+        savedUser.setPassword("encodedPw");
+        savedUser.setRole(user.getRole());
+        savedUser.setId(1L);
+
+        when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userMapper.registerRequestDtoToUser(dto)).thenReturn(user);
+        when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPw");
+        when(userRepository.save(user)).thenReturn(savedUser);
+
+//        doNothing().when(cartService).createCart(savedUser.getId());
+
+//        when(userMapper.UserToUserDto(savedUser)).thenReturn(userDto);
 
         //when
-        UserDto result=authenticationService.saveUser(requestDto);
+        UserDto result=authenticationService.saveUser(dto);
 
         //then
-        assertThat(result).isNull();
-        assertThat(requestDto.getEmail()).isEqualTo(result.getEmail());
-        assertThat(requestDto.getFirstName()).isEqualTo(result.getFirstName());
-        assertThat(requestDto.getLastName()).isEqualTo(result.getLastName());
+        assertThat(dto.getEmail()).isEqualTo(result.getEmail());
+        assertThat(dto.getFirstName()).isEqualTo(result.getFirstName());
+        assertThat(dto.getLastName()).isEqualTo(result.getLastName());
 
         verify(userRepository,times(1)).save(any(User.class));
     }
 
-    @Test
-    @Disabled
-    void authenticate() {
-    }
-
-    @Test
-    @Disabled
-    void verifyToken() {
-    }
+//    @Test
+//    @Disabled
+//    void authenticate() {
+//    }
+//
+//    @Test
+//    @Disabled
+//    void verifyToken() {
+//    }
 }

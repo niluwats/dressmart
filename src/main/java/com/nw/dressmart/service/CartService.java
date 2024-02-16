@@ -4,7 +4,8 @@ import com.nw.dressmart.dto.AddToCartRequestDto;
 import com.nw.dressmart.dto.CartDto;
 import com.nw.dressmart.dto.CartItemDto;
 
-public interface CartItemService {
+public interface CartService {
+    void createCart(Long userId);
     CartItemDto addToCart(Long cartId, AddToCartRequestDto request);
 
     CartDto getCart(Long id);

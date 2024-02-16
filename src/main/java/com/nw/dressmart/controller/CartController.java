@@ -3,7 +3,7 @@ package com.nw.dressmart.controller;
 import com.nw.dressmart.dto.AddToCartRequestDto;
 import com.nw.dressmart.dto.CartDto;
 import com.nw.dressmart.dto.CartItemDto;
-import com.nw.dressmart.service.CartItemService;
+import com.nw.dressmart.service.CartService;
 import com.nw.dressmart.service.JwtService;
 import com.nw.dressmart.service.UserService;
 import jakarta.validation.Valid;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/cart")
 public class CartController {
     @Autowired
-    private CartItemService cartItemService;
+    private CartService cartItemService;
 
     @Autowired
     private JwtService jwtService;

@@ -6,20 +6,21 @@ import com.nw.dressmart.dto.CartItemDto;
 import com.nw.dressmart.entity.Cart;
 import com.nw.dressmart.entity.CartItem;
 import com.nw.dressmart.entity.InventoryItem;
+import com.nw.dressmart.entity.User;
 import com.nw.dressmart.mappers.CartMapper;
 import com.nw.dressmart.repository.CartItemRepository;
 import com.nw.dressmart.repository.CartRepository;
 import com.nw.dressmart.repository.InventoryRepository;
+import com.nw.dressmart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
-public class CartItemServiceImpl implements CartItemService{
+public class CartServiceImpl implements CartService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
@@ -27,10 +28,24 @@ public class CartItemServiceImpl implements CartItemService{
     private CartRepository cartRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private InventoryRepository inventoryRepository;
 
     @Autowired
     private CartMapper cartMapper;
+
+    @Override
+    public void createCart(Long userId) {
+        User user=userRepository.findById(userId).orElseThrow(()->
+                new IllegalStateException("user not exists to create a cart"));
+        Cart cart=new Cart();
+        cart.setUser(user);
+        cart.setUpdatedTimestamp(LocalDateTime.now());
+
+        cartRepository.save(cart);
+    }
 
     @Override
     @Transactional

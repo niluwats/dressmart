@@ -3,9 +3,10 @@ package com.nw.dressmart.service;
 import com.nw.dressmart.dto.OrderRequestDto;
 import com.nw.dressmart.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service()
 public class OderServiceImpl implements OrderService{
     @Autowired
     private OrderRepository orderRepository;
