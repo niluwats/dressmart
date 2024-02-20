@@ -2,8 +2,9 @@ package com.nw.dressmart.service;
 
 import com.nw.dressmart.dto.InventoryDto;
 import com.nw.dressmart.dto.InventoryRequestDto;
-import com.nw.dressmart.entity.InventoryItem;
+import com.nw.dressmart.entity.Inventory;
 import com.nw.dressmart.entity.Item;
+import com.nw.dressmart.mappers.CustomInventoryMapper;
 import com.nw.dressmart.mappers.InventoryMapper;
 import com.nw.dressmart.repository.InventoryRepository;
 import com.nw.dressmart.repository.ItemRepository;
@@ -24,14 +25,14 @@ public class InventoryServiceImpl implements InventoryService{
     private ItemRepository itemRepository;
 
     @Autowired
-    private InventoryMapper inventoryMapper;
+    private CustomInventoryMapper inventoryMapper;
 
     @Override
     public InventoryDto addNewStock(InventoryRequestDto inventoryRequest) {
         Item item=itemRepository.findById(inventoryRequest.getItemId()).orElseThrow(()->
                 new IllegalStateException("item id "+inventoryRequest.getItemId()+" not found"));
 
-        InventoryItem inventoryItem=inventoryMapper.inventoryDtoToInventoryItem(inventoryRequest);
+        Inventory inventoryItem=inventoryMapper.inventoryDtoToInventoryItem(inventoryRequest);
         inventoryItem.setItem(item);
 
         inventoryRepository.save(inventoryItem);
@@ -40,7 +41,7 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public InventoryDto getStock(Long id) {
-        InventoryItem inventoryItem=inventoryRepository.findById(id).orElseThrow(()->
+        Inventory inventoryItem=inventoryRepository.findById(id).orElseThrow(()->
                 new IllegalStateException("inventory id "+id+" not found"));
 
         return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
@@ -48,13 +49,13 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public List<InventoryDto> getStocks() {
-        List<InventoryItem> inventoryItems=inventoryRepository.findAll();
+        List<Inventory> inventoryItems=inventoryRepository.findAll();
         return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
     }
 
     @Override
     public List<InventoryDto> getItemStocks(Long itemId) {
-        List<InventoryItem> inventoryItems=inventoryRepository.findAllByItem_Id(itemId);
+        List<Inventory> inventoryItems=inventoryRepository.findAllByItem_Id(itemId);
         return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
     }
 
@@ -63,7 +64,7 @@ public class InventoryServiceImpl implements InventoryService{
     public InventoryDto updateInventory(Long id, InventoryRequestDto inventoryRequest) {
         Long itemId=inventoryRequest.getItemId();
 
-        InventoryItem inventoryItem=inventoryRepository.findById(id).
+        Inventory inventoryItem=inventoryRepository.findById(id).
                 orElseThrow(()->new IllegalStateException("stock id "+id+" not found"));
 
         inventoryItem.setQuantity(inventoryRequest.getQuantity());

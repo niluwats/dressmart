@@ -43,7 +43,7 @@ class UserServiceImplTest {
     void findUserByEmail_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER);
+        User user=new User(1L,"john","doe",email,"john1234",Role.USER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -74,7 +74,7 @@ class UserServiceImplTest {
     void findUser_ShouldReturnUserIfExists() {
         //given
         Long userId=1L;
-        User user=new User(userId,"john","doe","john@example.com","john1234",Role.USER);
+        User user=new User(userId,"john","doe","john@example.com","john1234",Role.USER,false,true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -128,7 +128,7 @@ class UserServiceImplTest {
     void loadUserByUsername_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER);
+        User user=new User(1L,"john","doe",email,"john1234",Role.USER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 

@@ -44,7 +44,7 @@ public class Item {
     private LocalDateTime createdOn;
 
     @OneToMany(mappedBy = "item",cascade = CascadeType.ALL)
-    private List<InventoryItem> inventoryItem;
+    private List<Inventory> inventory;
 
     @Column(nullable = false)
     private Boolean status;
