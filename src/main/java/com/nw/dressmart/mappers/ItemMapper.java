@@ -8,27 +8,8 @@ import org.mapstruct.ReportingPolicy;
 
 import java.time.LocalDateTime;
 
-@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemMapper {
-   default ItemDto itemToItemDto(Item item){
-       ItemDto itemDto=new ItemDto();
-       itemDto.setId(item.getId());
-       itemDto.setName(item.getName());
-       itemDto.setDescription(item.getDescription());
-       itemDto.setPrice(item.getPrice());
-       itemDto.setCategoryName(item.getCategory().getName());
-       itemDto.setStatus(item.getStatus());
-       itemDto.setCreatedOn(item.getCreatedOn());
-       return  itemDto;
-   }
+    ItemDto itemToItemDto(Item item);
 
-    default Item itemDtoToItem(ItemRequestDto itemRequestDto){
-        Item item=new Item();
-        item.setName(itemRequestDto.getName());
-        item.setDescription(itemRequestDto.getDescription());
-        item.setPrice(itemRequestDto.getPrice());
-        item.setCreatedOn(LocalDateTime.now());
-        item.setStatus(true);
-        return item;
-    }
+    Item itemDtoToItem(ItemRequestDto itemRequestDto);
 }

@@ -52,14 +52,6 @@ public class User implements UserDetails {
     private Boolean locked=false;
     private Boolean enabled=true;
 
-    public User(Long id, @NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, @NonNull Role role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

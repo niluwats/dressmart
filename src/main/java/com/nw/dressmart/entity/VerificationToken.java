@@ -1,17 +1,13 @@
 package com.nw.dressmart.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "email_verification_tokens")
 public class VerificationToken {
@@ -26,12 +22,19 @@ public class VerificationToken {
             strategy = GenerationType.SEQUENCE
     )
     private Long id;
+
+    @NonNull
     private String token;
+
+    @NonNull
     private LocalDateTime createdAt;
+
+    @NonNull
     private LocalDateTime expireAt;
     private LocalDateTime verifiedAt;
 
     @OneToOne(targetEntity = User.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",nullable = false)
+    @NonNull
     private User user;
 }

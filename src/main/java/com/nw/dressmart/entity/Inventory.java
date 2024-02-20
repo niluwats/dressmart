@@ -7,22 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class InventoryItem {
+public class Inventory {
     @Id
     @SequenceGenerator(
-            name = "inventory_item_sequence",
-            sequenceName = "inventory_item_sequence",
+            name = "inventory_sequence",
+            sequenceName = "inventory_sequence",
             initialValue = 20
     )
     @GeneratedValue(
-            generator = "inventory_item_sequence",
+            generator = "inventory_sequence",
             strategy = GenerationType.SEQUENCE
     )
     private Long id;
@@ -35,6 +34,5 @@ public class InventoryItem {
 
     private LocalDateTime createdOn;
 
-    @OneToMany(mappedBy = "inventoryItem")
-    private List<CartItem> cartItemList;
+    private LocalDateTime expiredOn;
 }

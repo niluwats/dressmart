@@ -1,24 +1,21 @@
 package com.nw.dressmart.service;
 
-import com.nw.dressmart.config.TestConfig;
+import com.nw.dressmart.dto.LoginRequestDto;
+import com.nw.dressmart.dto.LoginResponseDto;
 import com.nw.dressmart.dto.RegisterRequestDto;
 import com.nw.dressmart.dto.UserDto;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.entity.User;
 import com.nw.dressmart.mappers.UserMapper;
-import com.nw.dressmart.repository.CartRepository;
 import com.nw.dressmart.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -38,7 +35,12 @@ class AuthenticationServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock CartService cartService;
+    @Mock
+    AuthenticationManager authenticationManager;
+
+    @Mock JwtService jwtService;
+
+    @Mock VerificationService verificationService;
 
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
@@ -49,8 +51,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    @Disabled
-    void saveUser_ShouldSaveUserAndCreateCard() {
+    void saveUser_ShouldSaveUser() {
         //given
         RegisterRequestDto dto=new RegisterRequestDto("john","doe","mkmk@example.com","password");
 
@@ -74,28 +75,54 @@ class AuthenticationServiceImplTest {
         when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPw");
         when(userRepository.save(user)).thenReturn(savedUser);
 
-//        doNothing().when(cartService).createCart(savedUser.getId());
-
-//        when(userMapper.UserToUserDto(savedUser)).thenReturn(userDto);
+        UserDto userDto = new UserDto(1L, "test", "sata", "asda");
+        when(userMapper.UserToUserDto(savedUser)).thenReturn(userDto);
 
         //when
         UserDto result=authenticationService.saveUser(dto);
 
         //then
-        assertThat(dto.getEmail()).isEqualTo(result.getEmail());
-        assertThat(dto.getFirstName()).isEqualTo(result.getFirstName());
-        assertThat(dto.getLastName()).isEqualTo(result.getLastName());
+        assertThat(userDto.getEmail()).isEqualTo(result.getEmail());
+        assertThat(userDto.getFirstName()).isEqualTo(result.getFirstName());
+        assertThat(userDto.getLastName()).isEqualTo(result.getLastName());
 
         verify(userRepository,times(1)).save(any(User.class));
     }
 
+    @Test
+    void authenticate_ShouldAuthenticateUser() {
+        //given
+        LoginRequestDto request=new LoginRequestDto("nilu@gmail.com","password");
+        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+        String token="token";
+        LoginResponseDto response=new LoginResponseDto(token);
+
+        when(authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()))).thenReturn(null);
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.generateToken(user)).thenReturn(token);
+
+        //when
+        LoginResponseDto result=authenticationService.authenticate(request);
+
+        //then
+        assertThat(response.getToken()).isEqualTo(result.getToken());
+    }
+
 //    @Test
-//    @Disabled
-//    void authenticate() {
-//    }
+//    void verifyToken_shouldVerifyToken() {
+//        String token="token";
+//        String msg="Email verified";
+//        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+//        VerificationToken verificationToken=new VerificationToken(
+//                token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
 //
-//    @Test
-//    @Disabled
-//    void verifyToken() {
+//        when(verificationService.getToken(token)).thenReturn(Optional.of(verificationToken));
+//        doNothing().when(verificationService).setVerifiedAt(token);
+//        when(userRepository.enableUser(user.getEmail())).thenReturn(1);
+//
+//        String result=authenticationService.verifyToken(token);
+//
+//        assertThat(result).isEqualTo(msg);
 //    }
 }

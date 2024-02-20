@@ -9,6 +9,4 @@ public interface AuthenticationService {
     UserDto saveUser(RegisterRequestDto request);
 
     LoginResponseDto authenticate(LoginRequestDto request);
-
-    public String verifyToken(String token);
 }

@@ -4,6 +4,7 @@ import com.nw.dressmart.dto.ItemDto;
 import com.nw.dressmart.dto.ItemRequestDto;
 import com.nw.dressmart.entity.Category;
 import com.nw.dressmart.entity.Item;
+import com.nw.dressmart.mappers.CustomItemMapper;
 import com.nw.dressmart.mappers.ItemMapper;
 import com.nw.dressmart.repository.CategoryRepository;
 import com.nw.dressmart.repository.ItemRepository;
@@ -24,7 +25,7 @@ public class ItemServiceImpl implements  ItemService{
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private ItemMapper itemMapper;
+    private CustomItemMapper itemMapper;
 
     @Override
     public ItemDto createItem(ItemRequestDto itemRequest) {
