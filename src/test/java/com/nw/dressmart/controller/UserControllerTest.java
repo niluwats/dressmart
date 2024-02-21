@@ -48,9 +48,15 @@ class UserControllerTest {
     void getUser_ShouldGetUserById() {
         UserDto user=new UserDto(1L,"john","doe","john@example.com");
         when(userService.findUser(1L)).thenReturn(user);
-        when(userService.findUser(1L)).thenReturn(user);
 
         ResponseEntity<UserDto> result=userController.getUser(1L);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void deleteUser_ShouldDeleteUser(){
+        when(userService.deleteUser(1L)).thenReturn("user deleted");
+        ResponseEntity<String> result=userController.deleteUser(1L);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

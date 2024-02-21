@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,9 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@DataJpaTest
 class AuthenticationServiceImplTest {
 
     @Mock
@@ -90,6 +89,17 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
+    void saveUser_ShouldFailWhenEmailAlreadyExists(){
+        RegisterRequestDto dto=new RegisterRequestDto("john","doe","mkmk@example.com","password");
+        User user=new User(dto.getFirstName(),dto.getLastName(),dto.getEmail(),"encodedPw",Role.USER);
+
+        when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(user));
+        assertThrows(IllegalStateException.class,()->
+                authenticationService.saveUser(dto),
+                "user with email " + dto.getEmail() +" already exists");
+    }
+
+    @Test
     void authenticate_ShouldAuthenticateUser() {
         //given
         LoginRequestDto request=new LoginRequestDto("nilu@gmail.com","password");
@@ -109,20 +119,12 @@ class AuthenticationServiceImplTest {
         assertThat(response.getToken()).isEqualTo(result.getToken());
     }
 
-//    @Test
-//    void verifyToken_shouldVerifyToken() {
-//        String token="token";
-//        String msg="Email verified";
-//        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
-//        VerificationToken verificationToken=new VerificationToken(
-//                token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
-//
-//        when(verificationService.getToken(token)).thenReturn(Optional.of(verificationToken));
-//        doNothing().when(verificationService).setVerifiedAt(token);
-//        when(userRepository.enableUser(user.getEmail())).thenReturn(1);
-//
-//        String result=authenticationService.verifyToken(token);
-//
-//        assertThat(result).isEqualTo(msg);
-//    }
+    @Test
+    void authenticate_ShouldFailWhenEmailNotFound(){
+        LoginRequestDto request=new LoginRequestDto("nilu@gmail.com","password");
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
+        assertThrows(IllegalStateException.class,()->
+                authenticationService.authenticate(request),
+                "user with email " + request.getEmail() +" not found");
+    }
 }

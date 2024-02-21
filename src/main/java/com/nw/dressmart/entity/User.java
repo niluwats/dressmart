@@ -49,8 +49,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean locked=false;
-    private Boolean enabled=true;
+    private Boolean locked=true;
+    private Boolean enabled=false;
 
 
     @Override

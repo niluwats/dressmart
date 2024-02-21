@@ -1,5 +1,5 @@
 package com.nw.dressmart.service;
 
 public interface EmailService {
-    void send(String to,String email);
+    void send(String email,String content);
 }

@@ -43,6 +43,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public String deleteUser(Long id) {
+        User user=userRepository.findById(id).orElseThrow(
+                ()->new IllegalStateException("user not found")
+        );
+
+        user.setEnabled(false);
+        user.setLocked(true);
+
+        userRepository.save(user);
+        return "user deleted";
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).
                 orElseThrow(()->

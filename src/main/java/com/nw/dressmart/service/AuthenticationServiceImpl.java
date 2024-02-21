@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         User savedUser=userRepository.save(user);
 
-//        emailVerification(user, request.getEmail(), request.getFirstName());
+        verificationService.saveVerificationToken(user);
 
         return userMapper.UserToUserDto(savedUser);
     }

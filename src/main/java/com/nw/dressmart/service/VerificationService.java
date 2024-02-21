@@ -8,7 +8,5 @@ import java.util.Optional;
 public interface VerificationService {
     void saveVerificationToken(User user);
 
-    Optional<VerificationToken> getToken(String token);
-
     String verifyToken(String token);
 }

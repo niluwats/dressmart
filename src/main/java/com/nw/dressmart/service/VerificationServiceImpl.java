@@ -42,11 +42,6 @@ public class VerificationServiceImpl implements VerificationService{
     }
 
     @Override
-    public Optional<VerificationToken> getToken(String token) {
-        return verificationRepository.findByToken(token);
-    }
-
-    @Override
     public String verifyToken(String token) {
         VerificationToken verificationToken = verificationRepository.findByToken(token)
                 .orElseThrow(() ->
@@ -61,11 +56,12 @@ public class VerificationServiceImpl implements VerificationService{
             throw new IllegalStateException("link expired");
         }
 
+        verificationRepository.updateVerifiedAt(token,LocalDateTime.now());
         userRepository.enableUser(verificationToken.getUser().getEmail());
         return "Email verified";
     }
 
-    private String buildEmail(String name, String link) {
+    protected String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +

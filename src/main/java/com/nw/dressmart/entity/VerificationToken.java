@@ -8,9 +8,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "email_verification_tokens")
 public class VerificationToken {
+    public VerificationToken() {
+    }
+
     @Id
     @SequenceGenerator(
             name = "verification_token_sequence",

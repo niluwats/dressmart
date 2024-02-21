@@ -5,6 +5,7 @@ import com.nw.dressmart.dto.LoginResponseDto;
 import com.nw.dressmart.dto.RegisterRequestDto;
 import com.nw.dressmart.dto.UserDto;
 import com.nw.dressmart.service.AuthenticationService;
+import com.nw.dressmart.service.VerificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +23,9 @@ class AuthControllerTest {
 
     @Mock
     AuthenticationService authenticationService;
+
+    @Mock
+    VerificationService verificationService;
 
     @InjectMocks
     AuthController authController;
@@ -53,5 +57,15 @@ class AuthControllerTest {
         ResponseEntity<LoginResponseDto> result=authController.login(request);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void verifyEmail_ShouldVerifyEmail(){
+        String token="jgfoiwj9";
+        when(verificationService.verifyToken(token)).thenReturn("Email verified");
+
+        ResponseEntity<String> result=authController.verifyEmail(token);
+
+        assertThat(result.getBody()).isEqualTo("Email verified");
     }
 }
