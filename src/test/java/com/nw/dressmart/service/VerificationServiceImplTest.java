@@ -79,7 +79,7 @@ class VerificationServiceImplTest {
 
         when(verificationRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
         when(verificationRepository.updateVerifiedAt(any(String.class),any(LocalDateTime.class))).thenReturn(1);
-        when(userRepository.enableUser(user.getEmail())).thenReturn(1);
+        doNothing().when(userRepository).enableUser(user.getEmail());
 
         String result=verificationService.verifyToken(token);
 

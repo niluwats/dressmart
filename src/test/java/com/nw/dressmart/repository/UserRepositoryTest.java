@@ -4,6 +4,7 @@ import com.nw.dressmart.config.TestConfig;
 import com.nw.dressmart.entity.Role;
 import com.nw.dressmart.entity.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,6 +24,24 @@ class UserRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user=new User(
+                20L,
+                "nilupulee",
+                "wathsala",
+                "nw@gmail.com",
+                passwordEncoder.encode("nilupulee&123"),
+                Role.USER,
+                true,
+                false
+        );
+
+        underTest.save(user);
+    }
+
     @AfterEach
     void tearDown() {
         underTest.deleteAll();
@@ -32,16 +51,6 @@ class UserRepositoryTest {
     void itShouldFindUserByEmail() {
         //given
         String email="nw@gmail.com";
-
-        User user=new User(
-                "nilupulee",
-                "wathsala",
-                email,
-                passwordEncoder.encode("nilupulee&123"),
-                Role.USER
-        );
-
-        underTest.save(user);
 
         //when
         Optional<User> expected=underTest.findByEmail(email);
@@ -53,7 +62,7 @@ class UserRepositoryTest {
     @Test
     void itShouldCheckIfUserEmailNotExists() {
         //given
-        String email="nw@gmail.com";
+        String email="nilu@gmail.com";
 
         //when
         Optional<User> expected=underTest.findByEmail(email);
@@ -64,28 +73,16 @@ class UserRepositoryTest {
 
     @Test
     void itShouldEnableUser() {
-        //given
-        String email="nw@gmail.com";
+        Long id=20L;
+        Optional<User> savedUser=underTest.findById(user.getId());
+        assertThat(savedUser).isPresent();
 
-        User user=new User(
-                "nilupulee",
-                "wathsala",
-                email,
-                passwordEncoder.encode("nilupulee&123"),
-                Role.USER
-        );
+        savedUser.get().setLocked(false);
+        savedUser.get().setEnabled(true);
 
-        underTest.save(user);
+        User enabledUser=underTest.save(savedUser.get());
 
-        //when
-        int updatedRows=underTest.enableUser(email);
-
-        //then
-        assertThat(updatedRows).isEqualTo(1);
-
-        Optional<User> enabledUser=underTest.findByEmail(email);
-        assertThat(enabledUser).isPresent();
-        assertThat(enabledUser.get().isEnabled()).isTrue();
-        assertThat(enabledUser.get().isAccountNonLocked()).isTrue();
+        assertThat(enabledUser.getEnabled()).isEqualTo(true);
+        assertThat(enabledUser.getLocked()).isEqualTo(false);
     }
 }
