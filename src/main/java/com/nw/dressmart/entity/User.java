@@ -18,15 +18,8 @@ import java.util.Collections;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "user_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @NonNull
@@ -49,17 +42,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean locked=false;
-    private Boolean enabled=true;
+    private Boolean locked=true;
+    private Boolean enabled=false;
 
-    public User(Long id, @NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, @NonNull Role role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

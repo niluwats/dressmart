@@ -33,9 +33,9 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.getStock(id));
     }
 
-    @GetMapping("{itemId}")
-    public ResponseEntity<List<InventoryDto>>getItemStocks(@PathVariable("itemId")Long id){
-        return ResponseEntity.ok(inventoryService.getItemStocks(id));
+    @GetMapping("{productId}")
+    public ResponseEntity<List<InventoryDto>>getProductStocks(@PathVariable("productId")Long id){
+        return ResponseEntity.ok(inventoryService.getProductStocks(id));
     }
 
     @PutMapping("/stock/{stockId}")

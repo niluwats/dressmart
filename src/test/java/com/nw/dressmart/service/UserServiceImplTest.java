@@ -7,11 +7,9 @@ import com.nw.dressmart.mappers.UserMapper;
 import com.nw.dressmart.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -21,9 +19,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
@@ -43,7 +41,7 @@ class UserServiceImplTest {
     void findUserByEmail_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER);
+        User user=new User(1L,"john","doe",email,"john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -74,7 +72,7 @@ class UserServiceImplTest {
     void findUser_ShouldReturnUserIfExists() {
         //given
         Long userId=1L;
-        User user=new User(userId,"john","doe","john@example.com","john1234",Role.USER);
+        User user=new User(userId,"john","doe","john@example.com","john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -103,8 +101,8 @@ class UserServiceImplTest {
     @Test
     void findAllUsers_ShouldReturnListOfUsers() {
         //given
-        User user1=new User("john","doe","john@example.com","john123", Role.USER);
-        User user2=new User("alice","smith","alice@example.com","alice!123", Role.USER);
+        User user1=new User("john","doe","john@example.com","john123", Role.CUSTOMER);
+        User user2=new User("alice","smith","alice@example.com","alice!123", Role.CUSTOMER);
         List<User> userList= Arrays.asList(user1,user2);
 
         when(userRepository.findAll()).thenReturn(userList);
@@ -128,7 +126,7 @@ class UserServiceImplTest {
     void loadUserByUsername_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER);
+        User user=new User(1L,"john","doe",email,"john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -152,4 +150,28 @@ class UserServiceImplTest {
                 .isInstanceOf(UsernameNotFoundException.class)
                 .hasMessage("user with email "+email+" not found");
     }
+
+    @Test
+    void deleteUser_ShouldDeleteUser(){
+        Long userId=1L;
+        User user=new User(userId,"john","doe","john@example.com","john1234",Role.CUSTOMER,false,true);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        user.setEnabled(false);
+        user.setLocked(true);
+
+        when(userRepository.save(user)).thenReturn(user);
+        String msg=userService.deleteUser(userId);
+        assertThat(msg).isEqualTo("user deleted");
+    }
+
+    @Test
+    void deleteUser_ShouldFailWhenUserNotFound(){
+        Long userId=1L;
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalStateException.class,()->userService.deleteUser(userId),"user not found");
+    }
+
 }

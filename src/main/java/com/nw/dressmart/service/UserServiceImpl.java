@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +40,19 @@ public class UserServiceImpl implements UserService{
     public List<UserDto> findAllUsers() {
         List<User> users=userRepository.findAll();
         return users.stream().map(userMapper::UserToUserDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public String deleteUser(Long id) {
+        User user=userRepository.findById(id).orElseThrow(
+                ()->new IllegalStateException("user not found")
+        );
+
+        user.setEnabled(false);
+        user.setLocked(true);
+
+        userRepository.save(user);
+        return "user deleted";
     }
 
     @Override

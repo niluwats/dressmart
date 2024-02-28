@@ -2,11 +2,11 @@ package com.nw.dressmart.service;
 
 import com.nw.dressmart.dto.InventoryDto;
 import com.nw.dressmart.dto.InventoryRequestDto;
-import com.nw.dressmart.entity.InventoryItem;
-import com.nw.dressmart.entity.Item;
-import com.nw.dressmart.mappers.InventoryMapper;
+import com.nw.dressmart.entity.Inventory;
+import com.nw.dressmart.entity.Product;
+import com.nw.dressmart.mappers.CustomInventoryMapper;
 import com.nw.dressmart.repository.InventoryRepository;
-import com.nw.dressmart.repository.ItemRepository;
+import com.nw.dressmart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,61 +21,61 @@ public class InventoryServiceImpl implements InventoryService{
     private InventoryRepository inventoryRepository;
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    private InventoryMapper inventoryMapper;
+    private CustomInventoryMapper inventoryMapper;
 
     @Override
     public InventoryDto addNewStock(InventoryRequestDto inventoryRequest) {
-        Item item=itemRepository.findById(inventoryRequest.getItemId()).orElseThrow(()->
-                new IllegalStateException("item id "+inventoryRequest.getItemId()+" not found"));
+        Product product=productRepository.findById(inventoryRequest.getProductId()).orElseThrow(()->
+                new IllegalStateException("product id "+inventoryRequest.getProductId()+" not found"));
 
-        InventoryItem inventoryItem=inventoryMapper.inventoryDtoToInventoryItem(inventoryRequest);
-        inventoryItem.setItem(item);
+        Inventory inventoryProduct=inventoryMapper.inventoryDtoToInventoryProduct(inventoryRequest);
+        inventoryProduct.setProduct(product);
 
-        inventoryRepository.save(inventoryItem);
-        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
+        inventoryRepository.save(inventoryProduct);
+        return inventoryMapper.inventoryProductToInventoryDto(inventoryProduct);
     }
 
     @Override
     public InventoryDto getStock(Long id) {
-        InventoryItem inventoryItem=inventoryRepository.findById(id).orElseThrow(()->
+        Inventory inventoryProduct=inventoryRepository.findById(id).orElseThrow(()->
                 new IllegalStateException("inventory id "+id+" not found"));
 
-        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
+        return inventoryMapper.inventoryProductToInventoryDto(inventoryProduct);
     }
 
     @Override
     public List<InventoryDto> getStocks() {
-        List<InventoryItem> inventoryItems=inventoryRepository.findAll();
-        return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
+        List<Inventory> inventoryProducts=inventoryRepository.findAll();
+        return inventoryProducts.stream().map(inventoryMapper::inventoryProductToInventoryDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<InventoryDto> getItemStocks(Long itemId) {
-        List<InventoryItem> inventoryItems=inventoryRepository.findAllByItem_Id(itemId);
-        return inventoryItems.stream().map(inventoryMapper::inventoryItemToInventoryDto).collect(Collectors.toList());
+    public List<InventoryDto> getProductStocks(Long productId) {
+        List<Inventory> inventoryProducts=inventoryRepository.findAllByProduct_Id(productId);
+        return inventoryProducts.stream().map(inventoryMapper::inventoryProductToInventoryDto).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
     public InventoryDto updateInventory(Long id, InventoryRequestDto inventoryRequest) {
-        Long itemId=inventoryRequest.getItemId();
+        Long productId=inventoryRequest.getProductId();
 
-        InventoryItem inventoryItem=inventoryRepository.findById(id).
+        Inventory inventoryProduct=inventoryRepository.findById(id).
                 orElseThrow(()->new IllegalStateException("stock id "+id+" not found"));
 
-        inventoryItem.setQuantity(inventoryRequest.getQuantity());
+        inventoryProduct.setQuantity(inventoryRequest.getQuantity());
 
-        if(!Objects.equals(itemId,inventoryItem.getItem().getId())){
-            Item item=itemRepository.findById(itemId).orElseThrow(()->
-                    new IllegalStateException("item id "+itemId+" not found"));
+        if(!Objects.equals(productId,inventoryProduct.getProduct().getId())){
+            Product product=productRepository.findById(productId).orElseThrow(()->
+                    new IllegalStateException("product id "+productId+" not found"));
 
-            inventoryItem.setItem(item);
+            inventoryProduct.setProduct(product);
         }
 
-        return inventoryMapper.inventoryItemToInventoryDto(inventoryItem);
+        return inventoryMapper.inventoryProductToInventoryDto(inventoryProduct);
     }
 
     @Override

@@ -1,37 +1,37 @@
 package com.nw.dressmart.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "email_verification_tokens")
 public class VerificationToken {
+    public VerificationToken() {
+    }
+
     @Id
-    @SequenceGenerator(
-            name = "verification_token_sequence",
-            sequenceName = "verification_token_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "verification_token_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
+
+    @NonNull
     private String token;
+
+    @NonNull
     private LocalDateTime createdAt;
+
+    @NonNull
     private LocalDateTime expireAt;
     private LocalDateTime verifiedAt;
 
     @OneToOne(targetEntity = User.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",nullable = false)
+    @NonNull
     private User user;
 }

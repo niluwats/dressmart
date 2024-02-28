@@ -3,8 +3,10 @@ package com.nw.dressmart.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
-public class ItemRequestDto {
+public class ProductRequestDto {
     @NotBlank(message = "name cannot be empty")
     @NotNull(message = "name is null")
     @Size(min = 2,message = "name should have at least 2 characters")
@@ -17,7 +19,7 @@ public class ItemRequestDto {
 
     @NotNull(message = "price cannot be null")
     @Min(value = 1,message = "price cannot be 0 or negative")
-    private Double price;
+    private BigDecimal price;
 
     @NotNull(message = "category ID cannot be null")
     @Min(value = 1,message = "category ID cannot be 0 or negative")

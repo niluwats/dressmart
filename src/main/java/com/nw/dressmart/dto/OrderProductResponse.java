@@ -1,16 +1,17 @@
 package com.nw.dressmart.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
-@Setter
 @Getter
-public class InventoryDto {
-    private Long stockId;
+@Setter
+@AllArgsConstructor
+public class OrderProductResponse {
     private Long productId;
     private String productName;
     private Integer quantity;
-    private LocalDateTime createdOn;
+    private BigDecimal subtotal;
 }

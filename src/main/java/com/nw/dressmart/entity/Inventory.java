@@ -6,20 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
+@AllArgsConstructor
 @Entity
-public class Category {
+public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id",referencedColumnName = "id",nullable = false)
+    private Product product;
 
-    private Boolean status;
+    private Integer quantity;
+
+    private LocalDateTime createdOn;
+
+    private LocalDateTime expiredOn;
 }

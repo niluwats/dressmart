@@ -5,6 +5,7 @@ import com.nw.dressmart.dto.LoginResponseDto;
 import com.nw.dressmart.dto.RegisterRequestDto;
 import com.nw.dressmart.dto.UserDto;
 import com.nw.dressmart.service.AuthenticationService;
+import com.nw.dressmart.service.VerificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthenticationService authService;
+
+    @Autowired
+    private VerificationService verificationService;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterRequestDto request){
@@ -29,6 +33,6 @@ public class AuthController {
 
     @GetMapping("/verifyEmail")
     public ResponseEntity<String> verifyEmail(@RequestParam("token") String token){
-        return ResponseEntity.ok(authService.verifyToken(token));
+        return ResponseEntity.ok(verificationService.verifyToken(token));
     }
 }

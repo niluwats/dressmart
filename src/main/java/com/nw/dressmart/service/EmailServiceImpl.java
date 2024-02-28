@@ -18,25 +18,29 @@ public class EmailServiceImpl implements EmailService{
     private JavaMailSender mailSender;
 
     @Autowired
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
     private final static Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String email, String content) {
         try{
             MimeMessage mimeMessage=mailSender.createMimeMessage();
-            MimeMessageHelper helper=new MimeMessageHelper(mimeMessage,"utf-8");
-            helper.setText(email,true);
-            helper.setTo(to);
+
+            MimeMessageHelper helper=new MimeMessageHelper(mimeMessage,true);
+            helper.setText(content,true);
+            helper.setTo(email);
             helper.setSubject("Confirm your email");
             helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         }catch (MessagingException e){
             LOGGER.error("failed to send email "+e);
-            throw new IllegalStateException("failed to send email");
+            throw new IllegalStateException("failed to send email ",e);
+        }catch (Exception e){
+            LOGGER.error("unexpected error while sending email ",e);
+            throw new IllegalStateException("unexpected error while sending email ",e);
         }
     }
 }
