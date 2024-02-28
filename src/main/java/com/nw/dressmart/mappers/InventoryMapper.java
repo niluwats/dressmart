@@ -9,8 +9,8 @@ import org.mapstruct.ReportingPolicy;
 import java.time.LocalDateTime;
 
 public interface InventoryMapper {
-    Inventory inventoryDtoToInventoryItem(InventoryRequestDto inventoryRequestDto);
+    Inventory inventoryDtoToInventoryProduct(InventoryRequestDto inventoryRequestDto);
 
-   InventoryDto inventoryItemToInventoryDto(Inventory inventoryItem);
+   InventoryDto inventoryProductToInventoryDto(Inventory inventoryProduct);
 
 }

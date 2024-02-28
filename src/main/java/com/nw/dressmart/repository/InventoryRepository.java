@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory,Long> {
-    List<Inventory> findAllByItem_Id(Long itemId);
+    List<Inventory> findAllByProduct_Id(Long productId);
 }

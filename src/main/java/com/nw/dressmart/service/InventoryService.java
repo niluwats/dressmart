@@ -9,7 +9,7 @@ public interface InventoryService {
     InventoryDto addNewStock(InventoryRequestDto inventoryUpdateRequest);
     InventoryDto getStock(Long id);
     List<InventoryDto> getStocks();
-    List<InventoryDto> getItemStocks(Long itemId);
+    List<InventoryDto> getProductStocks(Long productId);
     InventoryDto updateInventory(Long id, InventoryRequestDto inventoryUpdateRequest);
     String deleteStock(Long id);
 }

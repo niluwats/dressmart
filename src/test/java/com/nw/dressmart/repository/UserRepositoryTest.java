@@ -34,7 +34,7 @@ class UserRepositoryTest {
                 "wathsala",
                 "nw@gmail.com",
                 passwordEncoder.encode("nilupulee&123"),
-                Role.USER,
+                Role.CUSTOMER,
                 true,
                 false
         );

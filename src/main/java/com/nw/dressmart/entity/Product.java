@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,18 +13,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "items")
-public class Item {
+@Table(name = "products")
+public class Product {
     @Id
-    @SequenceGenerator(
-            name = "item_sequence",
-            sequenceName = "item_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "item_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @Column(nullable = false)
@@ -33,7 +27,7 @@ public class Item {
     private String description;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne(targetEntity = Category.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id",nullable = false)
@@ -41,9 +35,7 @@ public class Item {
 
     private String imageUrl;
 
-    private LocalDateTime createdOn;
-
-    @OneToMany(mappedBy = "item",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<Inventory> inventory;
 
     @Column(nullable = false)

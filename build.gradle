@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.6'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.flywaydb.flyway' version '10.8.1'
 }
 
 group = 'com.nw'
@@ -31,6 +32,7 @@ dependencies {
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
+	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
@@ -49,4 +51,8 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+flyway{
+	url='jdbc:postgresql://localhost:5332/dressmart?user=nilupulee&password=12345'
 }

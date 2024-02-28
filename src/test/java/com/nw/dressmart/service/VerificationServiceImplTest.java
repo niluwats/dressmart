@@ -47,7 +47,7 @@ class VerificationServiceImplTest {
         ReflectionTestUtils.setField(verificationService,"tokenExpiration",5L);
         String token = "tokenexample";
 
-        User user = new User(1L, "john", "doe", "john@gmail.com", "john1234", Role.USER, false, true);
+        User user = new User(1L, "john", "doe", "john@gmail.com", "john1234", Role.CUSTOMER, false, true);
 
         VerificationToken verificationToken = new VerificationToken(
                 token,
@@ -73,7 +73,7 @@ class VerificationServiceImplTest {
     void verifyToken_ShouldVerifyToken() {
         String token="token";
         String msg="Email verified";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(
                 token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
 
@@ -98,7 +98,7 @@ class VerificationServiceImplTest {
     @Test
     void verifyToken_ShouldFailWhenEmailAlreadyVerified(){
         String token="token";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
         verificationToken.setVerifiedAt(LocalDateTime.now());
 
@@ -110,7 +110,7 @@ class VerificationServiceImplTest {
     @Test
     void verifyToken_ShouldFailWhenLinkExpired(){
         String token="token";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(token, LocalDateTime.now(),LocalDateTime.now().minusMinutes(1),user);
 
         when(verificationRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));

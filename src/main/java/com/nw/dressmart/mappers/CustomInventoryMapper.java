@@ -11,21 +11,21 @@ import java.time.LocalDateTime;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public class CustomInventoryMapper implements InventoryMapper{
     @Override
-    public Inventory inventoryDtoToInventoryItem(InventoryRequestDto inventoryRequestDto) {
-        Inventory inventoryItem=new Inventory();
-        inventoryItem.setQuantity(inventoryRequestDto.getQuantity());
-        inventoryItem.setCreatedOn(LocalDateTime.now());
-        return inventoryItem;
+    public Inventory inventoryDtoToInventoryProduct(InventoryRequestDto inventoryRequestDto) {
+        Inventory inventoryProduct=new Inventory();
+        inventoryProduct.setQuantity(inventoryRequestDto.getQuantity());
+        inventoryProduct.setCreatedOn(LocalDateTime.now());
+        return inventoryProduct;
     }
 
     @Override
-    public InventoryDto inventoryItemToInventoryDto(Inventory inventoryItem) {
+    public InventoryDto inventoryProductToInventoryDto(Inventory inventoryProduct) {
         InventoryDto inventoryDto=new InventoryDto();
-        inventoryDto.setStockId(inventoryItem.getId());
-        inventoryDto.setItemId(inventoryItem.getItem().getId());
-        inventoryDto.setItemName(inventoryItem.getItem().getName());
-        inventoryDto.setQuantity(inventoryItem.getQuantity());
-        inventoryDto.setCreatedOn(inventoryItem.getCreatedOn());
+        inventoryDto.setStockId(inventoryProduct.getId());
+        inventoryDto.setProductId(inventoryProduct.getProduct().getId());
+        inventoryDto.setProductName(inventoryProduct.getProduct().getName());
+        inventoryDto.setQuantity(inventoryProduct.getQuantity());
+        inventoryDto.setCreatedOn(inventoryProduct.getCreatedOn());
 
         return inventoryDto;
     }

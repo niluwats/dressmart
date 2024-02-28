@@ -7,11 +7,9 @@ import com.nw.dressmart.mappers.UserMapper;
 import com.nw.dressmart.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -43,7 +41,7 @@ class UserServiceImplTest {
     void findUserByEmail_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER,false,true);
+        User user=new User(1L,"john","doe",email,"john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -74,7 +72,7 @@ class UserServiceImplTest {
     void findUser_ShouldReturnUserIfExists() {
         //given
         Long userId=1L;
-        User user=new User(userId,"john","doe","john@example.com","john1234",Role.USER,false,true);
+        User user=new User(userId,"john","doe","john@example.com","john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -103,8 +101,8 @@ class UserServiceImplTest {
     @Test
     void findAllUsers_ShouldReturnListOfUsers() {
         //given
-        User user1=new User("john","doe","john@example.com","john123", Role.USER);
-        User user2=new User("alice","smith","alice@example.com","alice!123", Role.USER);
+        User user1=new User("john","doe","john@example.com","john123", Role.CUSTOMER);
+        User user2=new User("alice","smith","alice@example.com","alice!123", Role.CUSTOMER);
         List<User> userList= Arrays.asList(user1,user2);
 
         when(userRepository.findAll()).thenReturn(userList);
@@ -128,7 +126,7 @@ class UserServiceImplTest {
     void loadUserByUsername_ShouldReturnUserIfExists() {
         //given
         String email="john@example.com";
-        User user=new User(1L,"john","doe",email,"john1234",Role.USER,false,true);
+        User user=new User(1L,"john","doe",email,"john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
@@ -156,7 +154,7 @@ class UserServiceImplTest {
     @Test
     void deleteUser_ShouldDeleteUser(){
         Long userId=1L;
-        User user=new User(userId,"john","doe","john@example.com","john1234",Role.USER,false,true);
+        User user=new User(userId,"john","doe","john@example.com","john1234",Role.CUSTOMER,false,true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         user.setEnabled(false);

@@ -16,17 +16,18 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
+@NamedStoredProcedureQuery(
+        name = "create_order",
+        procedureName = "usp_create_order",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN,name = "param_user_id",type = int.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT,name = "order_id",type = int.class)
+        }
+)
 public class Order {
     @Id
-    @SequenceGenerator(
-            name = "order_sequence",
-            sequenceName = "order_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "order_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
@@ -34,7 +35,7 @@ public class Order {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
-    private List<OrderItem> orderItems;
+    private List<OrderProduct> orderProducts;
 
     @Column(nullable = false)
     private BigDecimal totalPrice;

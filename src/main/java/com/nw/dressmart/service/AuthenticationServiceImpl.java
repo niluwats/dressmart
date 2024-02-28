@@ -46,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         User user=userMapper.registerRequestDtoToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.CUSTOMER);
 
         User savedUser=userRepository.save(user);
 

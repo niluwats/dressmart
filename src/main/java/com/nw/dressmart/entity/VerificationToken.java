@@ -16,15 +16,8 @@ public class VerificationToken {
     }
 
     @Id
-    @SequenceGenerator(
-            name = "verification_token_sequence",
-            sequenceName = "verification_token_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "verification_token_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @NonNull

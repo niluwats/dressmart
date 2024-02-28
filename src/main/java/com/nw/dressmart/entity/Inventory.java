@@ -15,20 +15,13 @@ import java.time.LocalDateTime;
 @Entity
 public class Inventory {
     @Id
-    @SequenceGenerator(
-            name = "inventory_sequence",
-            sequenceName = "inventory_sequence",
-            initialValue = 20
-    )
-    @GeneratedValue(
-            generator = "inventory_sequence",
-            strategy = GenerationType.SEQUENCE
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id",referencedColumnName = "id",nullable = false)
-    private Item item;
+    @JoinColumn(name = "product_id",referencedColumnName = "id",nullable = false)
+    private Product product;
 
     private Integer quantity;
 

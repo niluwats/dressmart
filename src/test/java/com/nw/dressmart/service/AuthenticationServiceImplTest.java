@@ -59,7 +59,7 @@ class AuthenticationServiceImplTest {
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         user.setPassword("encodedPw");
-        user.setRole(Role.USER);
+        user.setRole(Role.CUSTOMER);
 
         User savedUser=new User();
         savedUser.setFirstName(user.getFirstName());
@@ -91,7 +91,7 @@ class AuthenticationServiceImplTest {
     @Test
     void saveUser_ShouldFailWhenEmailAlreadyExists(){
         RegisterRequestDto dto=new RegisterRequestDto("john","doe","mkmk@example.com","password");
-        User user=new User(dto.getFirstName(),dto.getLastName(),dto.getEmail(),"encodedPw",Role.USER);
+        User user=new User(dto.getFirstName(),dto.getLastName(),dto.getEmail(),"encodedPw",Role.CUSTOMER);
 
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(user));
         assertThrows(IllegalStateException.class,()->
@@ -103,7 +103,7 @@ class AuthenticationServiceImplTest {
     void authenticate_ShouldAuthenticateUser() {
         //given
         LoginRequestDto request=new LoginRequestDto("nilu@gmail.com","password");
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.USER);
+        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
         String token="token";
         LoginResponseDto response=new LoginResponseDto(token);
 

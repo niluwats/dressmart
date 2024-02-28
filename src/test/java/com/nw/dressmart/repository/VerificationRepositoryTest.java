@@ -27,7 +27,7 @@ class VerificationRepositoryTest {
     void findByToken_ShouldFindByToken() {
         String token="token";
 
-        User user=new User(1L,"john","doe","john@gmail.com","john1234", Role.USER,false,true);
+        User user=new User(1L,"john","doe","john@gmail.com","john1234", Role.CUSTOMER,false,true);
 
         VerificationToken verificationToken=new VerificationToken(
                 token,
@@ -46,7 +46,7 @@ class VerificationRepositoryTest {
     void updateVerifiedAt_ShouldUpdateVerifiedAt() {
         String token="token";
 
-        User user=new User(1L,"john","doe","john@gmail.com","john1234", Role.USER,false,true);
+        User user=new User(1L,"john","doe","john@gmail.com","john1234", Role.CUSTOMER,false,true);
 
         VerificationToken verificationToken=new VerificationToken(
                 token,
