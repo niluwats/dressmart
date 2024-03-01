@@ -1,0 +1,10 @@
+INSERT INTO users(first_name,last_name,email,password,role,enabled,locked) VALUES('bob','martin','bob@gmail.com','$2a$10$IgwST6ngx.9ELWXAAwoYduRLJ/RAkdo.cyw9gKRio4CyqtGwqwHdq','ADMIN',TRUE,FALSE);
+INSERT INTO users(first_name,last_name,email,password,role,enabled,locked) VALUES('alice','sam','alice@gmail.com','$2a$10$Ufkvxrk9uwu4Y.fdATiMXO9Pq9H8ky1rsoxk5FerE2XOWFzUuxYvW','CUSTOMER',TRUE,FALSE);
+INSERT INTO users(first_name,last_name,email,password,role,enabled,locked) VALUES('mac','ted','mac@gmail.com','$2a$10$Ufkvxrk9uwu4Y.fdATiMXO9Pq9H8ky1rsoxk5FerE2XOWFzUuxYvW','CUSTOMER',TRUE,FALSE);
+INSERT INTO categories(name,status) VALUES('shirts',TRUE);
+INSERT INTO categories(name,status) VALUES('trousers',TRUE);
+INSERT INTO categories(name,status) VALUES('tshirts',TRUE);
+INSERT INTO products(name,description,price,category_id,status) VALUES('nikeL','nike L cotton','2000',1,TRUE);
+INSERT INTO products(name,description,price,category_id,status) VALUES('nikeXS','nike XS cotton','2000',1,TRUE);
+INSERT INTO inventory(quantity,product_id,created_on) VALUES('20',1,CURRENT_TIMESTAMP);
+INSERT INTO inventory(quantity,product_id,created_on) VALUES('25',2,CURRENT_TIMESTAMP);
