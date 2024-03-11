@@ -21,10 +21,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     @Getter(AccessLevel.NONE)
-    @Value("${security.jwt.secret-key}")
+    @Value("${spring.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${security.jwt.expiration-time}")
+    @Value("${spring.security.jwt.expiration-time}")
     private Long jwtExpiration;
 
     public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
