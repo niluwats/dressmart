@@ -10,8 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,8 +104,8 @@ class UserServiceImplTest {
     @Test
     void findAllUsers_ShouldReturnListOfUsers() {
         //given
-        User user1=new User("john","doe","john@example.com","john123", Role.CUSTOMER);
-        User user2=new User("alice","smith","alice@example.com","alice!123", Role.CUSTOMER);
+        User user1=new User(1L,"john","doe","john@example.com","john123", Role.CUSTOMER,false,true);
+        User user2=new User(2L,"alice","smith","alice@example.com","alice!123", Role.CUSTOMER,false,true);
         List<User> userList= Arrays.asList(user1,user2);
 
         when(userRepository.findAll()).thenReturn(userList);

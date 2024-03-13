@@ -21,6 +21,7 @@ public class AuthController {
     @Autowired
     private VerificationService verificationService;
 
+
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterRequestDto request){
         return new ResponseEntity<UserDto>(authService.saveUser(request), HttpStatus.CREATED);

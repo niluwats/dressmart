@@ -9,4 +9,6 @@ public interface AuthenticationService {
     UserDto saveUser(RegisterRequestDto request);
 
     LoginResponseDto authenticate(LoginRequestDto request);
+
+    LoginResponseDto authenticate();
 }

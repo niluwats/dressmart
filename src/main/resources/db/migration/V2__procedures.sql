@@ -5,10 +5,6 @@ create or replace procedure USP_CREATE_ORDER(
 LANGUAGE PLPGSQL
 AS $$
 begin
-	IF NOT EXISTS (SELECT 1 FROM users WHERE id=param_user_id) THEN
-		ROLLBACK;
-		RAISE EXCEPTION 'USER DOES NOT EXISTS';
-	END IF;
 	INSERT INTO orders(order_timestamp,total_price,status,user_id)
 	VALUES(CURRENT_TIMESTAMP,0.0,'PROCESSING',param_user_id) RETURNING id INTO order_id;
 END $$;

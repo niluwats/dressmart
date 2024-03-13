@@ -1,7 +1,5 @@
 package com.nw.dressmart.config;
 
-import com.nw.dressmart.mappers.UserMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +22,6 @@ public class AppConfig {
 
     @Value("${spring.mail.password}")
     private String password;
-
-    @Bean
-    public ModelMapper modelMapper(){
-        return  new ModelMapper();
-    }
 
     @Bean
     public JavaMailSender mailSender(){

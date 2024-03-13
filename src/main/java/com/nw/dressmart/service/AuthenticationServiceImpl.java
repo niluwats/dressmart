@@ -72,4 +72,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         String token = jwtService.generateToken(user);
         return new LoginResponseDto(token);
     }
+
+    @Override
+    public LoginResponseDto authenticate() {
+        return null;
+    }
 }
