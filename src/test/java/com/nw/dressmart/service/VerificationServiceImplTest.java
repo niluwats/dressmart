@@ -73,7 +73,11 @@ class VerificationServiceImplTest {
     void verifyToken_ShouldVerifyToken() {
         String token="token";
         String msg="Email verified";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
+        User user=new User();
+        user.setFirstName("nilupulee");
+        user.setLastName("wathsala");
+        user.setEmail("nilu@gmail.com");
+        user.setRole(Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(
                 token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
 
@@ -98,7 +102,12 @@ class VerificationServiceImplTest {
     @Test
     void verifyToken_ShouldFailWhenEmailAlreadyVerified(){
         String token="token";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
+        User user=new User();
+        user.setFirstName("nilupulee");
+        user.setLastName("wathsala");
+        user.setEmail("nilu@gmail.com");
+        user.setPassword("encodedPw");
+        user.setRole(Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(token, LocalDateTime.now(),LocalDateTime.now().plusMinutes(5),user);
         verificationToken.setVerifiedAt(LocalDateTime.now());
 
@@ -110,7 +119,12 @@ class VerificationServiceImplTest {
     @Test
     void verifyToken_ShouldFailWhenLinkExpired(){
         String token="token";
-        User user=new User("nilupulee","wathsala","nilu@gmail.com","encodedPw",Role.CUSTOMER);
+        User user=new User();
+        user.setFirstName("nilupulee");
+        user.setLastName("wathsala");
+        user.setEmail("nilu@gmail.com");
+        user.setPassword("encodedPw");
+        user.setRole(Role.CUSTOMER);
         VerificationToken verificationToken=new VerificationToken(token, LocalDateTime.now(),LocalDateTime.now().minusMinutes(1),user);
 
         when(verificationRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));

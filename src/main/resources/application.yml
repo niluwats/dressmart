@@ -16,6 +16,21 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration-time: 86400000
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+
   flyway:
     baseline-on-migrate: true
     enable: true
@@ -27,8 +42,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: niluwats@gmail.com
-    password: dyjtnzjmeyjdzzpf
+    username: ${EMAIL}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -36,11 +51,6 @@ spring:
           starttls:
             enable: true
 
-
 verification:
   email-verification-expiration: 15
 
-security:
-  jwt:
-    secret-key: 0c7a60c5ab82db29b8c352c0d61738f3c295ea372e8d839ba919c99e6d7a3d6e
-    expiration-time: 86400000

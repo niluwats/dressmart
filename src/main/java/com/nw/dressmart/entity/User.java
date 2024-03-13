@@ -34,7 +34,6 @@ public class User implements UserDetails {
     @Column(nullable = false,unique = true)
     private String email;
 
-    @NonNull
     @Column(nullable = false)
     private String password;
 
