@@ -6,7 +6,9 @@ import com.nw.dressmart.entity.VerificationToken;
 import java.util.Optional;
 
 public interface VerificationService {
-    void saveVerificationToken(User user);
+    String saveVerificationToken(User user);
+
+    String updateVerificationToken(String email);
 
     String verifyToken(String token);
 }

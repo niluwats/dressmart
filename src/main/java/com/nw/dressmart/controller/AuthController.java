@@ -1,9 +1,7 @@
 package com.nw.dressmart.controller;
 
-import com.nw.dressmart.dto.LoginRequestDto;
-import com.nw.dressmart.dto.LoginResponseDto;
-import com.nw.dressmart.dto.RegisterRequestDto;
-import com.nw.dressmart.dto.UserDto;
+import com.nw.dressmart.dto.*;
+import com.nw.dressmart.entity.User;
 import com.nw.dressmart.service.AuthenticationService;
 import com.nw.dressmart.service.VerificationService;
 import jakarta.validation.Valid;
@@ -35,5 +33,10 @@ public class AuthController {
     @GetMapping("/verifyEmail")
     public ResponseEntity<String> verifyEmail(@RequestParam("token") String token){
         return ResponseEntity.ok(verificationService.verifyToken(token));
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<String>resendEmail(@Valid @RequestBody SendEmailDto sendEmailDto){
+        return ResponseEntity.ok( verificationService.updateVerificationToken(sendEmailDto.getEmail()));
     }
 }

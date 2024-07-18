@@ -14,6 +14,9 @@ import java.util.Optional;
 public interface VerificationRepository extends JpaRepository<VerificationToken,Long> {
     Optional<VerificationToken> findByToken(String token);
 
+    @Query("select v from VerificationToken v join v.user u where u.email = ?1")
+    Optional<VerificationToken> findByUserEmail(String email);
+
     @Transactional
     @Modifying
     @Query("UPDATE VerificationToken v SET v.verifiedAt=?2 WHERE v.token=?1")

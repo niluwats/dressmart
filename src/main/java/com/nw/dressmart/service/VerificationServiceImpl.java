@@ -7,6 +7,7 @@ import com.nw.dressmart.repository.VerificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class VerificationServiceImpl implements VerificationService{
     private Long tokenExpiration;
 
     @Override
-    public void saveVerificationToken(User user) {
+    public String saveVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken(
                 token,
@@ -39,6 +40,27 @@ public class VerificationServiceImpl implements VerificationService{
         String link="http://localhost:8080/api/v1/auth/verifyEmail?token="+token;
         emailService.send(user.getEmail(), buildEmail(user.getFirstName(), link));
         verificationRepository.save(verificationToken);
+        return "Success";
+    }
+
+    @Transactional
+    @Override
+    public String updateVerificationToken(String email) {
+        User user=userRepository.findByEmail(email).orElseThrow(()->
+                new IllegalStateException("user with email - "+email+" not found, please register!"));
+
+        VerificationToken verificationToken=verificationRepository.findByUserEmail(email).orElseThrow(()->
+                new IllegalStateException("verification token not found"));
+
+        System.out.println("Token-----------"+verificationToken.getToken());
+
+        String token = UUID.randomUUID().toString();
+        verificationToken.setToken(token);
+        verificationToken.setCreatedAt(LocalDateTime.now());
+        verificationToken.setExpireAt(LocalDateTime.now().plusMinutes(tokenExpiration));
+        String link="http://localhost:8080/api/v1/auth/verifyEmail?token="+token;
+        emailService.send(user.getEmail(), buildEmail(user.getFirstName(), link));
+        return "Success";
     }
 
     @Override
